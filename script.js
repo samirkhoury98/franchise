@@ -112,7 +112,7 @@ pdfViewer.appendChild(canvas1);
 // Load the PDF file
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-pdfjsLib.getDocument('first_3_chapters.pdf').promise
+pdfjsLib.getDocument('pdf/first_3_chapters.pdf').promise
     .then(function(pdfDoc_) {
         pdfDoc = pdfDoc_;
         document.getElementById('totalPages').textContent = pdfDoc.numPages;
