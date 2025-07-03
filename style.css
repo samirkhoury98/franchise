@@ -1239,7 +1239,7 @@ audio#audio {
     }
 
     .hero-container {
-        background: url('new_bg_2.png') no-repeat center center;
+        background: url('photos-min/new_bg_2-min.png') no-repeat center center;
         background-size: cover;
     }
 }
