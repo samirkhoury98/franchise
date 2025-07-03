@@ -282,6 +282,9 @@ html, body {
         background: url('photos-min/new_bg_2-min.png') no-repeat center center;
         background-size: cover;
     }
+    .drawer-menu-list li {
+        margin-bottom: 0.5rem;
+    }
 }
 
 #author-bio {
