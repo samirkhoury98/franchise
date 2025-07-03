@@ -908,7 +908,13 @@ html, body {
 
 @media (max-width: 600px) {
     .hero-corner-book {
-        display: none; /* Hide the corner book image on mobile */
+        display: block;
+        position: static;
+        margin: 200px auto 12px auto;
+        width: 180px;
+        height: auto;
+        z-index: 30;
+        transform: none;
     }
 
     .hero-signature-image {
