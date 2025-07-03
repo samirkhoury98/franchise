@@ -792,6 +792,9 @@ html, body {
         max-width: 100%;
         height: auto !important;
     }
+    .zoom-controls {
+        display: none;
+    }
 }
 
 @media (max-width: 1200px) {
