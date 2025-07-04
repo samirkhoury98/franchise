@@ -15,12 +15,16 @@ html, body {
 }
 
 .hero-container {
-    position: relative;
-    width: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-evenly;
+    align-items: center;
     height: 100vh;
+    padding: 40px 20px;
     background: url('photos-min/new_bg_2-min.png') no-repeat center center;
     background-size: cover;
     overflow: hidden;
+    gap: 40px;
 }
 
 .hamburger {
@@ -213,26 +217,41 @@ html, body {
     color: #fff;
 }
 
-.logo-3d-container {
-    position: absolute;
-    top: 12%;
-    left: 39%;
-    transform: translate(-50%, -50%);
-    width: 170px;
-    height: 170px;
-    z-index: 999;
+.hero-3d-elements {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    width: 100%;
+    margin-bottom: 0;
+    position: static;
+    z-index: auto;
+}
+
+.logo-3d-container,
+.text-3d-container {
+    position: static !important;
+    left: auto !important;
+    top: auto !important;
+    transform: none !important;
     pointer-events: none;
 }
 
+.logo-3d-container {
+    width: 12vw;
+    height: 12vw;
+    max-width: 170px;
+    max-height: 170px;
+    margin-right: -30px;
+    margin-top: 15px;
+}
+
 .text-3d-container {
-    position: absolute;
-    top: 11%;
-    left: 54%;
-    transform: translate(-50%, -50%);
-    width: 400px;
-    height: 400px;
-    z-index: 999;
-    pointer-events: none;
+    width: 28vw;
+    height: 28vw;
+    max-width: 400px;
+    max-height: 400px;
 }
 
 .logo-3d-container model-viewer {
@@ -254,17 +273,26 @@ html, body {
 }
 
 @media (max-width: 600px) {
+    .hero-3d-elements {
+        position: static;
+        top: auto;
+        left: auto;
+        transform: none;
+        display: flex;
+        flex-direction: row;
+        gap: 4vw;
+    }
     .logo-3d-container {
-        top: 12%;
-        left: 19%;
-        width: 130px;
-        height: 130px;
+        width: 50vw;
+        height: 50vw;
+        max-width: 130px;
+        max-height: 130px;
     }
     .text-3d-container {
-        top: 11%;
-        left: 65%;
-        width: 300px;
-        height: 300px;
+        width: 70vw;
+        height: 70vw;
+        max-width: 300px;
+        max-height: 300px;
     }
     .logo-3d-container model-viewer {
         width: 100% !important;
@@ -284,6 +312,15 @@ html, body {
     }
     .drawer-menu-list li {
         margin-bottom: 0.5rem;
+    }
+    .hero-corner-book {
+        display: block;
+        position: static;
+        width: 45vw;
+        max-width: 180px;
+        height: auto;
+        z-index: 30;
+        transform: none;
     }
 }
 
@@ -854,10 +891,11 @@ html, body {
 }
 
 .hero-welcome-message {
-    position: absolute;
-    top: 55%;
-    left: 50%;
-    transform: translate(-50%, -50%);
+    position: static;
+    top: auto;
+    left: auto;
+    transform: none;
+    margin: 0;
     background: #000;
     color: #CB9D33;
     font-family: 'Homenaje', sans-serif;
@@ -875,14 +913,18 @@ html, body {
 
 @media (max-width: 600px) {
     .hero-welcome-message {
+        position: static;
         top: auto;
-        bottom: 20px;
-        transform: translateX(-50%);
+        bottom: auto;
+        left: auto;
+        transform: none;
         font-size: 1.1rem;
         padding: 10px 12px;
         width: 95vw;
         max-width: 95vw;
         border-radius: 7px;
+        margin: 20px auto;
+        display: block;
     }
 }
 
@@ -898,8 +940,9 @@ html, body {
 .hero-corner-book {
     position: absolute;
     top: 18px;
-    left: 4tak5px;
-    width: 320px;
+    left: 45px;
+    width: 22vw;
+    max-width: 320px;
     height: auto;
     z-index: 30;
     box-shadow: 0 2px 8px rgba(0,0,0,0.18);
@@ -910,8 +953,8 @@ html, body {
     .hero-corner-book {
         display: block;
         position: static;
-        margin: 200px auto 12px auto;
-        width: 180px;
+        width: 45vw;
+        max-width: 180px;
         height: auto;
         z-index: 30;
         transform: none;
@@ -929,14 +972,18 @@ html, body {
     }
 
     .hero-welcome-message {
+        position: static;
         top: auto;
-        bottom: 20px;
-        transform: translateX(-50%);
+        bottom: auto;
+        left: auto;
+        transform: none;
         font-size: 1.1rem;
         padding: 10px 12px;
         width: 95vw;
         max-width: 95vw;
         border-radius: 7px;
+        margin: 20px auto;
+        display: block;
     }
 }
 
@@ -1240,19 +1287,25 @@ audio#audio {
     }
 
     .hero-welcome-message {
+        position: static;
         top: auto;
-        bottom: 20px;
-        transform: translateX(-50%);
+        bottom: auto;
+        left: auto;
+        transform: none;
         font-size: 1.1rem;
         padding: 10px 12px;
         width: 95vw;
         max-width: 95vw;
         border-radius: 7px;
+        margin: 20px auto;
+        display: block;
     }
 
     .hero-container {
         background: url('photos-min/new_bg_2-min.png') no-repeat center center;
         background-size: cover;
+        height: auto;
+    
     }
 }
 
@@ -1278,14 +1331,18 @@ audio#audio {
     }
 
     .hero-welcome-message {
+        position: static;
         top: auto;
-        bottom: 20px;
-        transform: translateX(-50%);
+        bottom: auto;
+        left: auto;
+        transform: none;
         font-size: 1.1rem;
         padding: 10px 12px;
         width: 95vw;
         max-width: 95vw;
         border-radius: 7px;
+        margin: 20px auto;
+        display: block;
     }
 }
 
@@ -1449,4 +1506,14 @@ audio#audio {
 
 #purchase {
     scroll-margin-top: 10px;
+}
+
+@media (max-width: 900px) {
+    .hero-container {
+        flex-direction: column;
+        justify-content: flex-start;
+        gap: 30px;
+        height: auto;
+        padding: 30px 10px;
+    }
 }

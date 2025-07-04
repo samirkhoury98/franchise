@@ -8,49 +8,45 @@
     <link href="https://fonts.googleapis.com/css2?family=Homenaje&display=swap&family=Alex+Brush&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="style.css">
 </head>
-
-
-
-
-
-
 <body>
     <div class="hero-container">
+        <div class="hero-3d-elements">
+            <div class="logo-3d-container">
+                <model-viewer src="logos/untitled5.glb"
+                    alt="3D Logo"
+                    camera-controls
+                    disable-zoom
+                    camera-orbit="0deg 75deg 105%"
+                    min-camera-orbit="auto auto 50%"
+                    max-camera-orbit="auto auto 150%"
+                    shadow-intensity="1"
+                    environment-image="neutral"
+                    exposure="1"
+                    shadow-softness="1"
+                    ar-status="not-presenting"
+                    interaction-prompt="none"
+                    style="width: 100%; height: 100%;">
+                </model-viewer>
+            </div>
+            <div class="text-3d-container">
+                <model-viewer src="logos/novels.glb"
+                    alt="3D Text"
+                    camera-controls
+                    disable-zoom
+                    camera-orbit="0deg 75deg 105%"
+                    min-camera-orbit="auto auto 50%"
+                    max-camera-orbit="auto auto 150%"
+                    shadow-intensity="1"
+                    environment-image="neutral"
+                    exposure="1"
+                    shadow-softness="1"
+                    ar-status="not-presenting"
+                    interaction-prompt="none"
+                    style="width: 100%; height: 100%;">
+                </model-viewer>
+            </div>
+        </div>
         <img src="photos-min/a-min.png" alt="" class="hero-corner-book">
-        <div class="logo-3d-container">
-            <model-viewer src="logos/untitled5.glb"
-                alt="3D Logo"
-                camera-controls
-                disable-zoom
-                camera-orbit="0deg 75deg 105%"
-                min-camera-orbit="auto auto 50%"
-                max-camera-orbit="auto auto 150%"
-                shadow-intensity="1"
-                environment-image="neutral"
-                exposure="1"
-                shadow-softness="1"
-                ar-status="not-presenting"
-                interaction-prompt="none"
-                style="width: 100%; height: 100%;">
-            </model-viewer>
-        </div>
-        <div class="text-3d-container">
-            <model-viewer src="logos/novels.glb"
-                alt="3D Text"
-                camera-controls
-                disable-zoom
-                camera-orbit="0deg 75deg 105%"
-                min-camera-orbit="auto auto 50%"
-                max-camera-orbit="auto auto 150%"
-                shadow-intensity="1"
-                environment-image="neutral"
-                exposure="1"
-                shadow-softness="1"
-                ar-status="not-presenting"
-                interaction-prompt="none"
-                style="width: 100%; height: 100%;">
-            </model-viewer>
-        </div>
         <div class="hero-welcome-message">
             <div class="hero-welcome-heading">A message from the author:</div>
             Hi guys, my name is Edmund Benjamin, and I'd like to welcome you to my website. I've been lucky to have lived several interesting lives, and having come out on the other side, I am now excited to introduce you to my debut true crime novel: The Franchise. To give you a feel for my work, I've included a short book trailer and made a few chapters available for free. I hope you enjoy my storytelling and get a sense of the world I've created. Thank you for visiting. My love and respect to you all,<br> <span class="alex-brush">Benny</span> <br/>

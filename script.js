@@ -185,75 +185,75 @@ updateZoomLevel();
 // Behind the Scenes Carousel
 const videoContainer = document.querySelector('#behind-the-scenes .video-container');
 if (videoContainer) {
-    const videos = videoContainer.querySelectorAll('video');
-    const dots = videoContainer.querySelectorAll('.carousel-dot');
-    let currentVideoIndex = 0;
-    let touchStartX = 0;
-    let touchEndX = 0;
+const videos = videoContainer.querySelectorAll('video');
+const dots = videoContainer.querySelectorAll('.carousel-dot');
+let currentVideoIndex = 0;
+let touchStartX = 0;
+let touchEndX = 0;
 
-    function updateCarousel() {
-        // Hide all videos
-        videos.forEach(video => {
-            video.classList.remove('active');
-            video.pause();
-        });
-        
-        // Show current video
-        videos[currentVideoIndex].classList.add('active');
-        
-        // Update dots
-        dots.forEach((dot, index) => {
-            dot.classList.toggle('active', index === currentVideoIndex);
-        });
-    }
-
-    function showNextVideo() {
-        if (currentVideoIndex < videos.length - 1) {
-            currentVideoIndex++;
-            updateCarousel();
-        }
-    }
-
-    function showPrevVideo() {
-        if (currentVideoIndex > 0) {
-            currentVideoIndex--;
-            updateCarousel();
-        }
-    }
-
-    // Add touch event listeners for swipe functionality
-    videoContainer.addEventListener('touchstart', (e) => {
-        touchStartX = e.changedTouches[0].screenX;
+function updateCarousel() {
+    // Hide all videos
+    videos.forEach(video => {
+        video.classList.remove('active');
+        video.pause();
     });
-
-    videoContainer.addEventListener('touchend', (e) => {
-        touchEndX = e.changedTouches[0].screenX;
-        handleSwipe();
-    });
-
-    function handleSwipe() {
-        const swipeThreshold = 50;
-        const diff = touchStartX - touchEndX;
-        
-        if (Math.abs(diff) > swipeThreshold) {
-            if (diff > 0) {
-                showNextVideo();
-            } else {
-                showPrevVideo();
-            }
-        }
-    }
-
-    // Add click handlers for dots
+    
+    // Show current video
+    videos[currentVideoIndex].classList.add('active');
+    
+    // Update dots
     dots.forEach((dot, index) => {
-        dot.addEventListener('click', () => {
-            currentVideoIndex = index;
-            updateCarousel();
-        });
+        dot.classList.toggle('active', index === currentVideoIndex);
     });
+}
 
-    // Initialize carousel
-    updateCarousel();
+function showNextVideo() {
+    if (currentVideoIndex < videos.length - 1) {
+        currentVideoIndex++;
+        updateCarousel();
+    }
+}
+
+function showPrevVideo() {
+    if (currentVideoIndex > 0) {
+        currentVideoIndex--;
+        updateCarousel();
+    }
+}
+
+// Add touch event listeners for swipe functionality
+videoContainer.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+});
+
+videoContainer.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+});
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+            showNextVideo();
+        } else {
+            showPrevVideo();
+        }
+    }
+}
+
+// Add click handlers for dots
+dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+        currentVideoIndex = index;
+        updateCarousel();
+    });
+});
+
+// Initialize carousel
+updateCarousel();
 }
 
 // Spinning logo with pause after each rotation
