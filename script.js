@@ -425,4 +425,70 @@ document.addEventListener('DOMContentLoaded', function() {
     if (audio) {
         audio.volume = 0.2;
     }
+});
+
+// Photo Gallery Modal Logic
+const galleryModal = document.getElementById('photo-gallery-modal');
+const modalBackdrop = galleryModal.querySelector('.modal-backdrop');
+const modalLeftArrow = galleryModal.querySelector('.modal-arrow-left');
+const modalRightArrow = galleryModal.querySelector('.modal-arrow-right');
+const modalFrameImage = galleryModal.querySelector('.modal-fence-image');
+const modalPhoto = galleryModal.querySelector('.modal-framed-photo');
+const galleryPhotos = Array.from(document.querySelectorAll('#photo-gallery .framed-photo'));
+let modalPhotoIndex = 0;
+
+function openGalleryModal(index) {
+    modalPhotoIndex = index;
+    updateModalPhoto();
+    galleryModal.classList.add('open');
+    document.body.style.overflow = 'hidden';
+    // Update the main gallery to show the same photo
+    updatePhoto(index);
+}
+function closeGalleryModal() {
+    galleryModal.classList.remove('open');
+    document.body.style.overflow = '';
+}
+function updateModalPhoto() {
+    const photo = galleryPhotos[modalPhotoIndex];
+    modalPhoto.src = photo.src;
+    modalPhoto.alt = photo.alt;
+}
+modalLeftArrow.addEventListener('click', () => {
+    modalPhotoIndex = (modalPhotoIndex - 1 + galleryPhotos.length) % galleryPhotos.length;
+    updateModalPhoto();
+    // Update the main gallery to show the same photo
+    updatePhoto(modalPhotoIndex);
+});
+modalRightArrow.addEventListener('click', () => {
+    modalPhotoIndex = (modalPhotoIndex + 1) % galleryPhotos.length;
+    updateModalPhoto();
+    // Update the main gallery to show the same photo
+    updatePhoto(modalPhotoIndex);
+});
+modalBackdrop.addEventListener('click', closeGalleryModal);
+document.addEventListener('keydown', (e) => {
+    if (galleryModal.classList.contains('open')) {
+        if (e.key === 'Escape') closeGalleryModal();
+        if (e.key === 'ArrowLeft') modalLeftArrow.click();
+        if (e.key === 'ArrowRight') modalRightArrow.click();
+    }
+});
+galleryPhotos.forEach((photo, idx) => {
+    photo.style.cursor = 'pointer';
+    photo.addEventListener('click', () => openGalleryModal(idx));
+});
+// Swipe support for modal
+let touchStartX_modal = 0;
+let touchEndX_modal = 0;
+galleryModal.addEventListener('touchstart', (e) => {
+    touchStartX_modal = e.changedTouches[0].screenX;
+});
+galleryModal.addEventListener('touchend', (e) => {
+    touchEndX_modal = e.changedTouches[0].screenX;
+    const diff = touchStartX_modal - touchEndX_modal;
+    if (Math.abs(diff) > 50) {
+        if (diff > 0) modalRightArrow.click();
+        else modalLeftArrow.click();
+    }
 }); 
