@@ -2,6 +2,7 @@ const hamburger = document.getElementById('hamburger');
 const drawer = document.getElementById('drawer');
 const drawerClose = document.getElementById('drawerClose');
 const menuItems = document.querySelectorAll('.drawer-menu-list a');
+let isMobile = window.innerWidth <= 768;
 
 hamburger.addEventListener('click', () => {
     drawer.classList.add('open');
@@ -105,6 +106,7 @@ const MAX_ZOOM = 3.0;
 
 // Initialize PDF viewer
 const pdfViewer = document.getElementById('pdfViewer');
+
 
 // Don't load PDF on mobile devices
 if (isMobile) {
@@ -235,98 +237,8 @@ if (!isMobile) {
     updateZoomLevel();
 }
 
-// Behind the Scenes Carousel
-const videoContainer = document.querySelector('#behind-the-scenes .video-container');
-if (videoContainer) {
-const videos = videoContainer.querySelectorAll('video');
-const dots = videoContainer.querySelectorAll('.carousel-dot');
-let currentVideoIndex = 0;
-let touchStartX = 0;
-let touchEndX = 0;
 
-// Mobile optimization: Add error handling for videos
-videos.forEach(video => {
-    video.addEventListener('error', function(e) {
-        console.error('Video loading error:', e);
-        // Hide broken video and show next one
-        video.style.display = 'none';
-        if (currentVideoIndex < videos.length - 1) {
-            currentVideoIndex++;
-            updateCarousel();
-        }
-    });
-    
-    // Mobile optimization: Reduce video quality on mobile
-    if (isMobile) {
-        video.setAttribute('playsinline', '');
-        video.setAttribute('muted', '');
-    }
-});
 
-function updateCarousel() {
-    // Hide all videos
-    videos.forEach(video => {
-        video.classList.remove('active');
-        video.pause();
-    });
-    
-    // Show current video
-    videos[currentVideoIndex].classList.add('active');
-    
-    // Update dots
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentVideoIndex);
-    });
-}
-
-function showNextVideo() {
-    if (currentVideoIndex < videos.length - 1) {
-        currentVideoIndex++;
-        updateCarousel();
-    }
-}
-
-function showPrevVideo() {
-    if (currentVideoIndex > 0) {
-        currentVideoIndex--;
-        updateCarousel();
-    }
-}
-
-// Add touch event listeners for swipe functionality
-videoContainer.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-});
-
-videoContainer.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-});
-
-function handleSwipe() {
-    const swipeThreshold = 50;
-    const diff = touchStartX - touchEndX;
-    
-    if (Math.abs(diff) > swipeThreshold) {
-        if (diff > 0) {
-            showNextVideo();
-        } else {
-            showPrevVideo();
-        }
-    }
-}
-
-// Add click handlers for dots
-dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-        currentVideoIndex = index;
-        updateCarousel();
-    });
-});
-
-// Initialize carousel
-updateCarousel();
-}
 
 // Spinning logo with pause after each rotation
 const modelViewer = document.querySelector('.logo-3d-container model-viewer');
@@ -626,7 +538,6 @@ if (isMobile) {
 // Mobile optimization: Pause animations when not visible
 let isPageVisible = true;
 let animationPaused = false;
-let isMobile = window.innerWidth <= 768;
 
 // Check if page is visible
 function handleVisibilityChange() {
