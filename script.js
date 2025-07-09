@@ -317,6 +317,11 @@ if (modelViewer) {
     let spinning = true;
 
     function animateLogo(time) {
+        // Stop animation on mobile devices
+        if (isMobile) {
+            return;
+        }
+        
         if (!lastTime) lastTime = time;
         const delta = time - lastTime;
         lastTime = time;
@@ -338,7 +343,11 @@ if (modelViewer) {
             requestAnimationFrame(animateLogo);
         }
     }
-    requestAnimationFrame(animateLogo);
+    
+    // Only start animation on desktop
+    if (!isMobile) {
+        requestAnimationFrame(animateLogo);
+    }
 }
 
 // Contact Modal functionality
