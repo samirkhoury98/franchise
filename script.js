@@ -109,8 +109,13 @@ const canvas1 = document.createElement('canvas');
 const ctx1 = canvas1.getContext('2d');
 pdfViewer.appendChild(canvas1);
 
-// Load the PDF file
+// Load the PDF file with error handling
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+// Check if we're on mobile and reduce initial scale
+if (window.innerWidth <= 768) {
+    currentScale = 0.8;
+}
 
 pdfjsLib.getDocument('pdf/first_3_chapters.pdf').promise
     .then(function(pdfDoc_) {
@@ -119,27 +124,54 @@ pdfjsLib.getDocument('pdf/first_3_chapters.pdf').promise
         renderPage(pageNum);
     })
     .catch(function(error) {
+        console.error('PDF loading error:', error);
         pdfViewer.innerHTML = '<div style="color: #CB9D33; text-align: center; padding: 20px;">Error loading PDF. Please try refreshing the page.</div>';
     });
 
 function renderPage(num) {
+    if (pageRendering) {
+        pageNumPending = num;
+        return;
+    }
+    
     pageRendering = true;
     pdfDoc.getPage(num).then(function(page) {
         const viewport = page.getViewport({scale: currentScale});
-        canvas1.height = viewport.height;
-        canvas1.width = viewport.width;
+        
+        // Limit canvas size on mobile to prevent memory issues
+        const maxWidth = window.innerWidth <= 768 ? 800 : 1200;
+        const maxHeight = window.innerWidth <= 768 ? 1000 : 1600;
+        
+        if (viewport.width > maxWidth || viewport.height > maxHeight) {
+            const scale = Math.min(maxWidth / viewport.width, maxHeight / viewport.height);
+            const adjustedViewport = page.getViewport({scale: currentScale * scale});
+            canvas1.height = adjustedViewport.height;
+            canvas1.width = adjustedViewport.width;
+        } else {
+            canvas1.height = viewport.height;
+            canvas1.width = viewport.width;
+        }
+        
         const renderContext = {
             canvasContext: ctx1,
             viewport: viewport
         };
+        
         page.render(renderContext).promise.then(function() {
             pageRendering = false;
             if (pageNumPending !== null) {
                 renderPage(pageNumPending);
                 pageNumPending = null;
             }
+        }).catch(function(error) {
+            console.error('PDF rendering error:', error);
+            pageRendering = false;
         });
+    }).catch(function(error) {
+        console.error('PDF page loading error:', error);
+        pageRendering = false;
     });
+    
     document.getElementById('currentPage').textContent = num;
     document.getElementById('prevPage').disabled = num <= 1;
     document.getElementById('nextPage').disabled = num >= pdfDoc.numPages;
@@ -190,6 +222,25 @@ const dots = videoContainer.querySelectorAll('.carousel-dot');
 let currentVideoIndex = 0;
 let touchStartX = 0;
 let touchEndX = 0;
+
+// Mobile optimization: Add error handling for videos
+videos.forEach(video => {
+    video.addEventListener('error', function(e) {
+        console.error('Video loading error:', e);
+        // Hide broken video and show next one
+        video.style.display = 'none';
+        if (currentVideoIndex < videos.length - 1) {
+            currentVideoIndex++;
+            updateCarousel();
+        }
+    });
+    
+    // Mobile optimization: Reduce video quality on mobile
+    if (isMobile) {
+        video.setAttribute('playsinline', '');
+        video.setAttribute('muted', '');
+    }
+});
 
 function updateCarousel() {
     // Hide all videos
@@ -372,6 +423,12 @@ if (drawerAudioToggleBtn && siteAudio) {
 
 if (siteAudio) {
     siteAudio.volume = 0.2; // Set volume to 20%
+    
+    // Mobile optimization: Reduce audio quality on mobile
+    if (window.innerWidth <= 768) {
+        siteAudio.volume = 0.1; // Lower volume on mobile
+    }
+    
     const playAudio = () => {
         const promise = siteAudio.play();
         if (promise !== undefined) {
@@ -491,4 +548,55 @@ galleryModal.addEventListener('touchend', (e) => {
         if (diff > 0) modalRightArrow.click();
         else modalLeftArrow.click();
     }
-}); 
+});
+
+// Memory cleanup function for mobile optimization
+function cleanupMemory() {
+    // Clear canvas context to free memory
+    if (ctx1) {
+        ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
+    }
+    
+    // Pause all videos to free resources
+    const allVideos = document.querySelectorAll('video');
+    allVideos.forEach(video => {
+        if (!video.paused) {
+            video.pause();
+        }
+    });
+    
+    // Force garbage collection if available
+    if (window.gc) {
+        window.gc();
+    }
+}
+
+// Cleanup on page unload
+window.addEventListener('beforeunload', cleanupMemory);
+
+// Periodic cleanup on mobile devices
+if (isMobile) {
+    setInterval(cleanupMemory, 30000); // Cleanup every 30 seconds on mobile
+}
+
+// Mobile optimization: Pause animations when not visible
+let isPageVisible = true;
+let animationPaused = false;
+let isMobile = window.innerWidth <= 768;
+
+// Check if page is visible
+function handleVisibilityChange() {
+    isPageVisible = !document.hidden;
+}
+
+// Add visibility change listener
+document.addEventListener('visibilitychange', handleVisibilityChange);
+
+// Mobile optimization: Reduce 3D model quality on mobile
+if (isMobile) {
+    const modelViewers = document.querySelectorAll('model-viewer');
+    modelViewers.forEach(viewer => {
+        viewer.setAttribute('shadow-intensity', '0.5');
+        viewer.setAttribute('exposure', '0.8');
+    });
+} 
