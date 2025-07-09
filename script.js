@@ -105,30 +105,47 @@ const MAX_ZOOM = 3.0;
 
 // Initialize PDF viewer
 const pdfViewer = document.getElementById('pdfViewer');
-const canvas1 = document.createElement('canvas');
-const ctx1 = canvas1.getContext('2d');
-pdfViewer.appendChild(canvas1);
 
-// Load the PDF file with error handling
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+// Don't load PDF on mobile devices
+if (isMobile) {
+    // Completely hide the Free Chapters section on mobile
+    const pdfSection = document.getElementById('free-chapters');
+    if (pdfSection) {
+        pdfSection.style.display = 'none';
+    }
+    
+    // Also hide the menu item for free chapters on mobile
+    const freeChaptersMenuItem = document.querySelector('.drawer-menu-list a[href="#free-chapters"]');
+    if (freeChaptersMenuItem) {
+        freeChaptersMenuItem.parentElement.style.display = 'none';
+    }
+} else {
+    // Only load PDF on desktop
+    const canvas1 = document.createElement('canvas');
+    const ctx1 = canvas1.getContext('2d');
+    pdfViewer.appendChild(canvas1);
 
-// Check if we're on mobile and reduce initial scale
-if (window.innerWidth <= 768) {
-    currentScale = 0.8;
+    // Load the PDF file with error handling
+    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+    pdfjsLib.getDocument('pdf/first_3_chapters.pdf').promise
+        .then(function(pdfDoc_) {
+            pdfDoc = pdfDoc_;
+            document.getElementById('totalPages').textContent = pdfDoc.numPages;
+            renderPage(pageNum);
+        })
+        .catch(function(error) {
+            console.error('PDF loading error:', error);
+            pdfViewer.innerHTML = '<div style="color: #CB9D33; text-align: center; padding: 20px;">Error loading PDF. Please try refreshing the page.</div>';
+        });
 }
 
-pdfjsLib.getDocument('pdf/first_3_chapters.pdf').promise
-    .then(function(pdfDoc_) {
-        pdfDoc = pdfDoc_;
-        document.getElementById('totalPages').textContent = pdfDoc.numPages;
-        renderPage(pageNum);
-    })
-    .catch(function(error) {
-        console.error('PDF loading error:', error);
-        pdfViewer.innerHTML = '<div style="color: #CB9D33; text-align: center; padding: 20px;">Error loading PDF. Please try refreshing the page.</div>';
-    });
-
 function renderPage(num) {
+    // Don't render on mobile
+    if (isMobile) {
+        return;
+    }
+    
     if (pageRendering) {
         pageNumPending = num;
         return;
@@ -138,9 +155,9 @@ function renderPage(num) {
     pdfDoc.getPage(num).then(function(page) {
         const viewport = page.getViewport({scale: currentScale});
         
-        // Limit canvas size on mobile to prevent memory issues
-        const maxWidth = window.innerWidth <= 768 ? 800 : 1200;
-        const maxHeight = window.innerWidth <= 768 ? 1000 : 1600;
+        // Limit canvas size to prevent memory issues
+        const maxWidth = 1200;
+        const maxHeight = 1600;
         
         if (viewport.width > maxWidth || viewport.height > maxHeight) {
             const scale = Math.min(maxWidth / viewport.width, maxHeight / viewport.height);
@@ -188,8 +205,6 @@ function onNextPage() {
     pageNum++;
     renderPage(pageNum);
 }
-document.getElementById('prevPage').addEventListener('click', onPrevPage);
-document.getElementById('nextPage').addEventListener('click', onNextPage);
 
 // Zoom
 function zoomIn() {
@@ -206,13 +221,19 @@ function zoomOut() {
     }
     updateZoomLevel();
 }
-document.getElementById('zoomIn').addEventListener('click', zoomIn);
-document.getElementById('zoomOut').addEventListener('click', zoomOut);
 
 function updateZoomLevel() {
     document.getElementById('zoomLevel').textContent = Math.round(currentScale * 100) + '%';
 }
-updateZoomLevel();
+
+// Only add PDF controls on desktop
+if (!isMobile) {
+    document.getElementById('prevPage').addEventListener('click', onPrevPage);
+    document.getElementById('nextPage').addEventListener('click', onNextPage);
+    document.getElementById('zoomIn').addEventListener('click', zoomIn);
+    document.getElementById('zoomOut').addEventListener('click', zoomOut);
+    updateZoomLevel();
+}
 
 // Behind the Scenes Carousel
 const videoContainer = document.querySelector('#behind-the-scenes .video-container');
@@ -575,8 +596,8 @@ galleryModal.addEventListener('touchend', (e) => {
 
 // Memory cleanup function for mobile optimization
 function cleanupMemory() {
-    // Clear canvas context to free memory
-    if (ctx1) {
+    // Clear canvas context to free memory (only on desktop)
+    if (!isMobile && ctx1) {
         ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
     }
     
