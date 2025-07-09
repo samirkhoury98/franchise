@@ -417,45 +417,59 @@ if (drawerAudioToggleBtn && siteAudio) {
             drawerAudioToggleBtn.title = 'Pause';
         }
     }
-    drawerAudioToggleBtn.addEventListener('click', () => {
-        if (siteAudio.paused) {
-            siteAudio.play();
-        } else {
-            siteAudio.pause();
-        }
+    
+    // Only enable audio controls on desktop
+    if (!isMobile) {
+        drawerAudioToggleBtn.addEventListener('click', () => {
+            if (siteAudio.paused) {
+                siteAudio.play();
+            } else {
+                siteAudio.pause();
+            }
+            updateDrawerAudioToggleBtn();
+        });
+        siteAudio.addEventListener('play', updateDrawerAudioToggleBtn);
+        siteAudio.addEventListener('pause', updateDrawerAudioToggleBtn);
         updateDrawerAudioToggleBtn();
-    });
-    siteAudio.addEventListener('play', updateDrawerAudioToggleBtn);
-    siteAudio.addEventListener('pause', updateDrawerAudioToggleBtn);
-    updateDrawerAudioToggleBtn();
+    } else {
+        // Hide audio controls on mobile
+        drawerAudioToggleBtn.style.display = 'none';
+    }
 }
 
 if (siteAudio) {
     siteAudio.volume = 0.2; // Set volume to 20%
     
-    // Mobile optimization: Reduce audio quality on mobile
-    if (window.innerWidth <= 768) {
-        siteAudio.volume = 0.1; // Lower volume on mobile
-    }
-    
-    const playAudio = () => {
-        const promise = siteAudio.play();
-        if (promise !== undefined) {
-            promise.catch(error => {
-                console.log("Autoplay was prevented. Waiting for user interaction.");
-                const playOnFirstInteraction = () => {
-                    siteAudio.play().catch(e => console.error("Could not play audio on interaction:", e));
-                    window.removeEventListener('click', playOnFirstInteraction);
-                    window.removeEventListener('keydown', playOnFirstInteraction);
-                };
-                window.addEventListener('click', playOnFirstInteraction);
-                window.addEventListener('keydown', playOnFirstInteraction);
-            }).then(() => {
-                // Autoplay started!
-            });
+    // Stop audio on mobile devices
+    if (isMobile) {
+        siteAudio.pause();
+        siteAudio.currentTime = 0;
+        // Hide audio controls on mobile
+        const audioControls = document.querySelector('.drawer-audio-toggle');
+        if (audioControls) {
+            audioControls.style.display = 'none';
         }
-    };
-    window.addEventListener('DOMContentLoaded', playAudio);
+    } else {
+        // Only play audio on desktop
+        const playAudio = () => {
+            const promise = siteAudio.play();
+            if (promise !== undefined) {
+                promise.catch(error => {
+                    console.log("Autoplay was prevented. Waiting for user interaction.");
+                    const playOnFirstInteraction = () => {
+                        siteAudio.play().catch(e => console.error("Could not play audio on interaction:", e));
+                        window.removeEventListener('click', playOnFirstInteraction);
+                        window.removeEventListener('keydown', playOnFirstInteraction);
+                    };
+                    window.addEventListener('click', playOnFirstInteraction);
+                    window.addEventListener('keydown', playOnFirstInteraction);
+                }).then(() => {
+                    // Autoplay started!
+                });
+            }
+        };
+        window.addEventListener('DOMContentLoaded', playAudio);
+    }
 }
 
 // Pause site audio when videos are played
