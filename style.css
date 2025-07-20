@@ -707,15 +707,6 @@ html, body {
     }
 }
 
-@media (max-width: 768px) {
-  #free-chapters {
-    display: none !important;
-  }
-  .drawer-menu-list a[href="#free-chapters"] {
-    display: none !important;
-  }
-}
-
 .pdf-container {
     width: fit-content;
     margin: 0 auto;

@@ -2,7 +2,6 @@ const hamburger = document.getElementById('hamburger');
 const drawer = document.getElementById('drawer');
 const drawerClose = document.getElementById('drawerClose');
 const menuItems = document.querySelectorAll('.drawer-menu-list a');
-let isMobile = window.innerWidth <= 768;
 
 hamburger.addEventListener('click', () => {
     drawer.classList.add('open');
@@ -106,91 +105,41 @@ const MAX_ZOOM = 3.0;
 
 // Initialize PDF viewer
 const pdfViewer = document.getElementById('pdfViewer');
+const canvas1 = document.createElement('canvas');
+const ctx1 = canvas1.getContext('2d');
+pdfViewer.appendChild(canvas1);
 
+// Load the PDF file
+pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-// Don't load PDF on mobile devices
-if (isMobile) {
-    // Completely hide the Free Chapters section on mobile
-    const pdfSection = document.getElementById('free-chapters');
-    if (pdfSection) {
-        pdfSection.style.display = 'none';
-    }
-    
-    // Also hide the menu item for free chapters on mobile
-    const freeChaptersMenuItem = document.querySelector('.drawer-menu-list a[href="#free-chapters"]');
-    if (freeChaptersMenuItem) {
-        freeChaptersMenuItem.parentElement.style.display = 'none';
-    }
-} else {
-    // Only load PDF on desktop
-    const canvas1 = document.createElement('canvas');
-    const ctx1 = canvas1.getContext('2d');
-    pdfViewer.appendChild(canvas1);
-
-    // Load the PDF file with error handling
-    pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
-
-    pdfjsLib.getDocument('pdf/first_3_chapters.pdf').promise
-        .then(function(pdfDoc_) {
-            pdfDoc = pdfDoc_;
-            document.getElementById('totalPages').textContent = pdfDoc.numPages;
-            renderPage(pageNum);
-        })
-        .catch(function(error) {
-            console.error('PDF loading error:', error);
-            pdfViewer.innerHTML = '<div style="color: #CB9D33; text-align: center; padding: 20px;">Error loading PDF. Please try refreshing the page.</div>';
-        });
-}
+pdfjsLib.getDocument('pdf/first_3_chapters.pdf').promise
+    .then(function(pdfDoc_) {
+        pdfDoc = pdfDoc_;
+        document.getElementById('totalPages').textContent = pdfDoc.numPages;
+        renderPage(pageNum);
+    })
+    .catch(function(error) {
+        pdfViewer.innerHTML = '<div style="color: #CB9D33; text-align: center; padding: 20px;">Error loading PDF. Please try refreshing the page.</div>';
+    });
 
 function renderPage(num) {
-    // Don't render on mobile
-    if (isMobile) {
-        return;
-    }
-    
-    if (pageRendering) {
-        pageNumPending = num;
-        return;
-    }
-    
     pageRendering = true;
     pdfDoc.getPage(num).then(function(page) {
         const viewport = page.getViewport({scale: currentScale});
-        
-        // Limit canvas size to prevent memory issues
-        const maxWidth = 1200;
-        const maxHeight = 1600;
-        
-        if (viewport.width > maxWidth || viewport.height > maxHeight) {
-            const scale = Math.min(maxWidth / viewport.width, maxHeight / viewport.height);
-            const adjustedViewport = page.getViewport({scale: currentScale * scale});
-            canvas1.height = adjustedViewport.height;
-            canvas1.width = adjustedViewport.width;
-        } else {
-            canvas1.height = viewport.height;
-            canvas1.width = viewport.width;
-        }
-        
+        canvas1.height = viewport.height;
+        canvas1.width = viewport.width;
         const renderContext = {
             canvasContext: ctx1,
             viewport: viewport
         };
-        
         page.render(renderContext).promise.then(function() {
             pageRendering = false;
             if (pageNumPending !== null) {
                 renderPage(pageNumPending);
                 pageNumPending = null;
             }
-        }).catch(function(error) {
-            console.error('PDF rendering error:', error);
-            pageRendering = false;
         });
-    }).catch(function(error) {
-        console.error('PDF page loading error:', error);
-        pageRendering = false;
     });
-    
     document.getElementById('currentPage').textContent = num;
     document.getElementById('prevPage').disabled = num <= 1;
     document.getElementById('nextPage').disabled = num >= pdfDoc.numPages;
@@ -207,6 +156,8 @@ function onNextPage() {
     pageNum++;
     renderPage(pageNum);
 }
+document.getElementById('prevPage').addEventListener('click', onPrevPage);
+document.getElementById('nextPage').addEventListener('click', onNextPage);
 
 // Zoom
 function zoomIn() {
@@ -223,22 +174,87 @@ function zoomOut() {
     }
     updateZoomLevel();
 }
+document.getElementById('zoomIn').addEventListener('click', zoomIn);
+document.getElementById('zoomOut').addEventListener('click', zoomOut);
 
 function updateZoomLevel() {
     document.getElementById('zoomLevel').textContent = Math.round(currentScale * 100) + '%';
 }
+updateZoomLevel();
 
-// Only add PDF controls on desktop
-if (!isMobile) {
-    document.getElementById('prevPage').addEventListener('click', onPrevPage);
-    document.getElementById('nextPage').addEventListener('click', onNextPage);
-    document.getElementById('zoomIn').addEventListener('click', zoomIn);
-    document.getElementById('zoomOut').addEventListener('click', zoomOut);
-    updateZoomLevel();
+// Behind the Scenes Carousel
+const videoContainer = document.querySelector('#behind-the-scenes .video-container');
+if (videoContainer) {
+const videos = videoContainer.querySelectorAll('video');
+const dots = videoContainer.querySelectorAll('.carousel-dot');
+let currentVideoIndex = 0;
+let touchStartX = 0;
+let touchEndX = 0;
+
+function updateCarousel() {
+    // Hide all videos
+    videos.forEach(video => {
+        video.classList.remove('active');
+        video.pause();
+    });
+    
+    // Show current video
+    videos[currentVideoIndex].classList.add('active');
+    
+    // Update dots
+    dots.forEach((dot, index) => {
+        dot.classList.toggle('active', index === currentVideoIndex);
+    });
 }
 
+function showNextVideo() {
+    if (currentVideoIndex < videos.length - 1) {
+        currentVideoIndex++;
+        updateCarousel();
+    }
+}
 
+function showPrevVideo() {
+    if (currentVideoIndex > 0) {
+        currentVideoIndex--;
+        updateCarousel();
+    }
+}
 
+// Add touch event listeners for swipe functionality
+videoContainer.addEventListener('touchstart', (e) => {
+    touchStartX = e.changedTouches[0].screenX;
+});
+
+videoContainer.addEventListener('touchend', (e) => {
+    touchEndX = e.changedTouches[0].screenX;
+    handleSwipe();
+});
+
+function handleSwipe() {
+    const swipeThreshold = 50;
+    const diff = touchStartX - touchEndX;
+    
+    if (Math.abs(diff) > swipeThreshold) {
+        if (diff > 0) {
+            showNextVideo();
+        } else {
+            showPrevVideo();
+        }
+    }
+}
+
+// Add click handlers for dots
+dots.forEach((dot, index) => {
+    dot.addEventListener('click', () => {
+        currentVideoIndex = index;
+        updateCarousel();
+    });
+});
+
+// Initialize carousel
+updateCarousel();
+}
 
 // Spinning logo with pause after each rotation
 const modelViewer = document.querySelector('.logo-3d-container model-viewer');
@@ -250,11 +266,6 @@ if (modelViewer) {
     let spinning = true;
 
     function animateLogo(time) {
-        // Stop animation on mobile devices
-        if (isMobile) {
-            return;
-        }
-        
         if (!lastTime) lastTime = time;
         const delta = time - lastTime;
         lastTime = time;
@@ -276,11 +287,7 @@ if (modelViewer) {
             requestAnimationFrame(animateLogo);
         }
     }
-    
-    // Only start animation on desktop
-    if (!isMobile) {
-        requestAnimationFrame(animateLogo);
-    }
+    requestAnimationFrame(animateLogo);
 }
 
 // Contact Modal functionality
@@ -350,59 +357,39 @@ if (drawerAudioToggleBtn && siteAudio) {
             drawerAudioToggleBtn.title = 'Pause';
         }
     }
-    
-    // Only enable audio controls on desktop
-    if (!isMobile) {
-        drawerAudioToggleBtn.addEventListener('click', () => {
-            if (siteAudio.paused) {
-                siteAudio.play();
-            } else {
-                siteAudio.pause();
-            }
-            updateDrawerAudioToggleBtn();
-        });
-        siteAudio.addEventListener('play', updateDrawerAudioToggleBtn);
-        siteAudio.addEventListener('pause', updateDrawerAudioToggleBtn);
+    drawerAudioToggleBtn.addEventListener('click', () => {
+        if (siteAudio.paused) {
+            siteAudio.play();
+        } else {
+            siteAudio.pause();
+        }
         updateDrawerAudioToggleBtn();
-    } else {
-        // Hide audio controls on mobile
-        drawerAudioToggleBtn.style.display = 'none';
-    }
+    });
+    siteAudio.addEventListener('play', updateDrawerAudioToggleBtn);
+    siteAudio.addEventListener('pause', updateDrawerAudioToggleBtn);
+    updateDrawerAudioToggleBtn();
 }
 
 if (siteAudio) {
     siteAudio.volume = 0.2; // Set volume to 20%
-    
-    // Stop audio on mobile devices
-    if (isMobile) {
-        siteAudio.pause();
-        siteAudio.currentTime = 0;
-        // Hide audio controls on mobile
-        const audioControls = document.querySelector('.drawer-audio-toggle');
-        if (audioControls) {
-            audioControls.style.display = 'none';
+    const playAudio = () => {
+        const promise = siteAudio.play();
+        if (promise !== undefined) {
+            promise.catch(error => {
+                console.log("Autoplay was prevented. Waiting for user interaction.");
+                const playOnFirstInteraction = () => {
+                    siteAudio.play().catch(e => console.error("Could not play audio on interaction:", e));
+                    window.removeEventListener('click', playOnFirstInteraction);
+                    window.removeEventListener('keydown', playOnFirstInteraction);
+                };
+                window.addEventListener('click', playOnFirstInteraction);
+                window.addEventListener('keydown', playOnFirstInteraction);
+            }).then(() => {
+                // Autoplay started!
+            });
         }
-    } else {
-        // Only play audio on desktop
-        const playAudio = () => {
-            const promise = siteAudio.play();
-            if (promise !== undefined) {
-                promise.catch(error => {
-                    console.log("Autoplay was prevented. Waiting for user interaction.");
-                    const playOnFirstInteraction = () => {
-                        siteAudio.play().catch(e => console.error("Could not play audio on interaction:", e));
-                        window.removeEventListener('click', playOnFirstInteraction);
-                        window.removeEventListener('keydown', playOnFirstInteraction);
-                    };
-                    window.addEventListener('click', playOnFirstInteraction);
-                    window.addEventListener('keydown', playOnFirstInteraction);
-                }).then(() => {
-                    // Autoplay started!
-                });
-            }
-        };
-        window.addEventListener('DOMContentLoaded', playAudio);
-    }
+    };
+    window.addEventListener('DOMContentLoaded', playAudio);
 }
 
 // Pause site audio when videos are played
@@ -504,54 +491,4 @@ galleryModal.addEventListener('touchend', (e) => {
         if (diff > 0) modalRightArrow.click();
         else modalLeftArrow.click();
     }
-});
-
-// Memory cleanup function for mobile optimization
-function cleanupMemory() {
-    // Clear canvas context to free memory (only on desktop)
-    if (!isMobile && ctx1) {
-        ctx1.clearRect(0, 0, canvas1.width, canvas1.height);
-    }
-    
-    // Pause all videos to free resources
-    const allVideos = document.querySelectorAll('video');
-    allVideos.forEach(video => {
-        if (!video.paused) {
-            video.pause();
-        }
-    });
-    
-    // Force garbage collection if available
-    if (window.gc) {
-        window.gc();
-    }
-}
-
-// Cleanup on page unload
-window.addEventListener('beforeunload', cleanupMemory);
-
-// Periodic cleanup on mobile devices
-if (isMobile) {
-    setInterval(cleanupMemory, 30000); // Cleanup every 30 seconds on mobile
-}
-
-// Mobile optimization: Pause animations when not visible
-let isPageVisible = true;
-let animationPaused = false;
-
-// Check if page is visible
-function handleVisibilityChange() {
-    isPageVisible = !document.hidden;
-}
-
-// Add visibility change listener
-document.addEventListener('visibilitychange', handleVisibilityChange);
-
-// Mobile optimization: Reduce 3D model quality on mobile
-if (isMobile) {
-    const modelViewers = document.querySelectorAll('model-viewer');
-    modelViewers.forEach(viewer => {
-        viewer.setAttribute('shadow-intensity', '0.5');
-        viewer.setAttribute('exposure', '0.8');
-    });
-} 
+}); 
