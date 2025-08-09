@@ -51,7 +51,10 @@
                 </model-viewer>
             </div>
         </div>
-        <img src="photos-min/a-min.png" alt="" class="hero-corner-book">
+        <picture>
+            <source srcset="photos-min/a-min.webp" type="image/webp">
+            <img src="photos-min/a-min.png" alt="" class="hero-corner-book" decoding="async">
+        </picture>
         <div class="hero-welcome-message">
             <div class="hero-welcome-heading">A message from the author:</div>
             Hi guys, my name is Edmund Benjamin, and I'd like to welcome you to my website. I've been lucky to have lived several interesting lives, and having come out on the other side, I am now excited to introduce you to my debut true crime novel: The Franchise. To give you a feel for my work, I've included a short book trailer and made a few chapters available for free. I hope you enjoy my storytelling and get a sense of the world I've created. Thank you for visiting. My love and respect to you all,<br> <span class="alex-brush">Benny</span> <br/>
@@ -65,7 +68,7 @@
     <div class="drawer" id="drawer">
         <button class="drawer-close" id="drawerClose">&times;</button>
         <button class="drawer-audio-toggle" id="drawerAudioToggle" title="Play">&#9654;</button>
-        <img src="photos-min/author_pic-min.jpg" alt="Profile" class="drawer-profile">
+        <img src="photos-min/author_pic-min.jpg" alt="Profile" class="drawer-profile" loading="lazy" decoding="async">
         <div class="drawer-menu-title">Menu</div>
         <ul class="drawer-menu-list">
             <li><a href="#author-bio">AUTHOR BIO</a></li>
@@ -115,28 +118,28 @@
                 <div class="frame-container">
                     <button class="carousel-arrow left-arrow">❮</button>
                     <div class="gold-fence">
-                        <img src="photo-gallery/goldframe.png" alt="Gold Frame" class="fence-image">
-                        <img src="photo-gallery/dtyonkers.png" alt="Yonkers" class="framed-photo" data-caption="Downtown Yonkers, NY, Circa 1960's">
-                        <img src="photo-gallery/Group 16.png" alt="Acropolis Newspaper" class="framed-photo" data-caption="Original news article the day after the murder" style="display: none;">
-                        <img src="photo-gallery/Group 18.png" alt="Group 18" class="framed-photo" data-caption="John Acropolis in his late 30's" style="display: none;">
-                        <img src="photo-gallery/Acropolis_newspaper1.png" alt="Acropolis Newspaper 50th Anniversary" class="framed-photo" data-caption="News article on the 50th anniversary of Acropolis' murder" style="display: none;">
-                        <img src="photo-gallery/frontapt.png" alt="Yonkers Apartment" class="framed-photo" data-caption="Yonkers apartment building Acropolis lived in at the time of his murder" style="display: none;">
-                        <img src="photo-gallery/backapt.png" alt="Rear Apartment Entrance" class="framed-photo" data-caption="Rear entrance of Acropolis' residence where the murderer entered the building" style="display: none;">
-                        <img src="photo-gallery/rko.png" alt="RKO Building" class="framed-photo" data-caption="RKO building containing original teamster offices which resided on the 3rd floor" style="display: none;">
-                        <img src="photo-gallery/rkopresent.png" alt="RKO Building Present Day" class="framed-photo" data-caption="RKO Building - Present Day" style="display: none;">
-                        <img src="photo-gallery/interment.png" alt="Interment Card" class="framed-photo" data-caption="Interment Card" style="display: none;">
-                        <img src="photo-gallery/mthope.png" alt="Mt. Hope Cemetery Entrance" class="framed-photo" data-caption="Original entrance to Mt. Hope Cemetery;  Corner of Jackson ave and Saw Mill River rd" style="display: none;">
-                        <img src="photo-gallery/acropolisgrave.png" alt="Acropolis Gravesite" class="framed-photo" data-caption="Acropolis Gravesite" style="display: none;">
-                        <img src="photo-gallery/acropolisparents.png" alt="Acropolis Parents Gravesite" class="framed-photo" data-caption="Acropolis' adoptive parent's gravesite" style="display: none;">
-                        <img src="photo-gallery/Acropolisresting.png" alt="Acropolis Resting Place Today" class="framed-photo" data-caption="Acropolis' Resting Place Today" style="display: none;">
-                        <img src="photo-gallery/acropolis.png" alt="John Acropolis" class="framed-photo" data-caption="John Acropolis photographed in his prime" style="display: none;">
-                        <img src="photo-gallery/benny.png" alt="Benny" class="framed-photo" data-caption="Benny shortly before he got clean and sober" style="display: none;">
-                        <img src="photo-gallery/benny-jimmy.png" alt="Benny and Jimmy Shoes" class="framed-photo" data-caption="Benny & Jimmy Shoes" style="display: none;">
-                        <img src="photo-gallery/1stbooklogo.png" alt="Original Book Cover" class="framed-photo" data-caption="Original rendering of the book-cover" style="display: none;">
-                        <img src="photo-gallery/bookcover.png" alt="Polished Book-Cover" class="framed-photo" data-caption="Polished Book-Cover" style="display: none;">
-                        <img src="photo-gallery/character.png" alt="Characterboard" class="framed-photo" data-caption="Personal Characterboard used to structure all THE FRANCHI$E properties" style="display: none;">
-                        <img src="photo-gallery/apttrailer-min.png" alt="Apartment Book Trailer Set" class="framed-photo" data-caption="The star of the trailer with author in background" style="display: none;">
-                        <!-- <img src="photo gallery/overhead.png" alt="Overhead Shot" class="framed-photo" data-caption="Overhead shot of the murder victim" style="display: none;"> -->
+                        <img src="photo-gallery/goldframe.png" alt="Gold Frame" class="fence-image" loading="lazy" decoding="async">
+                        <img src="photo-gallery/dtyonkers.png" alt="Yonkers" class="framed-photo" data-caption="Downtown Yonkers, NY, Circa 1960's" decoding="async">
+                        <img data-src="photo-gallery/Group 16.png" alt="Acropolis Newspaper" class="framed-photo" data-caption="Original news article the day after the murder" style="display: none;">
+                        <img data-src="photo-gallery/Group 18.png" alt="Group 18" class="framed-photo" data-caption="John Acropolis in his late 30's" style="display: none;">
+                        <img data-src="photo-gallery/Acropolis_newspaper1.png" alt="Acropolis Newspaper 50th Anniversary" class="framed-photo" data-caption="News article on the 50th anniversary of Acropolis' murder" style="display: none;">
+                        <img data-src="photo-gallery/frontapt.png" alt="Yonkers Apartment" class="framed-photo" data-caption="Yonkers apartment building Acropolis lived in at the time of his murder" style="display: none;">
+                        <img data-src="photo-gallery/backapt.png" alt="Rear Apartment Entrance" class="framed-photo" data-caption="Rear entrance of Acropolis' residence where the murderer entered the building" style="display: none;">
+                        <img data-src="photo-gallery/rko.png" alt="RKO Building" class="framed-photo" data-caption="RKO building containing original teamster offices which resided on the 3rd floor" style="display: none;">
+                        <img data-src="photo-gallery/rkopresent.png" alt="RKO Building Present Day" class="framed-photo" data-caption="RKO Building - Present Day" style="display: none;">
+                        <img data-src="photo-gallery/interment.png" alt="Interment Card" class="framed-photo" data-caption="Interment Card" style="display: none;">
+                        <img data-src="photo-gallery/mthope.png" alt="Mt. Hope Cemetery Entrance" class="framed-photo" data-caption="Original entrance to Mt. Hope Cemetery;  Corner of Jackson ave and Saw Mill River rd" style="display: none;">
+                        <img data-src="photo-gallery/acropolisgrave.png" alt="Acropolis Gravesite" class="framed-photo" data-caption="Acropolis Gravesite" style="display: none;">
+                        <img data-src="photo-gallery/acropolisparents.png" alt="Acropolis Parents Gravesite" class="framed-photo" data-caption="Acropolis' adoptive parent's gravesite" style="display: none;">
+                        <img data-src="photo-gallery/Acropolisresting.png" alt="Acropolis Resting Place Today" class="framed-photo" data-caption="Acropolis' Resting Place Today" style="display: none;">
+                        <img data-src="photo-gallery/acropolis.png" alt="John Acropolis" class="framed-photo" data-caption="John Acropolis photographed in his prime" style="display: none;">
+                        <img data-src="photo-gallery/benny.png" alt="Benny" class="framed-photo" data-caption="Benny shortly before he got clean and sober" style="display: none;">
+                        <img data-src="photo-gallery/benny-jimmy.png" alt="Benny and Jimmy Shoes" class="framed-photo" data-caption="Benny & Jimmy Shoes" style="display: none;">
+                        <img data-src="photo-gallery/1stbooklogo.png" alt="Original Book Cover" class="framed-photo" data-caption="Original rendering of the book-cover" style="display: none;">
+                        <img data-src="photo-gallery/bookcover.png" alt="Polished Book-Cover" class="framed-photo" data-caption="Polished Book-Cover" style="display: none;">
+                        <img data-src="photo-gallery/character.png" alt="Characterboard" class="framed-photo" data-caption="Personal Characterboard used to structure all THE FRANCHI$E properties" style="display: none;">
+                        <img data-src="photo-gallery/apttrailer-min.png" alt="Apartment Book Trailer Set" class="framed-photo" data-caption="The star of the trailer with author in background" style="display: none;">
+                        <!-- <img data-src="photo gallery/overhead.png" alt="Overhead Shot" class="framed-photo" data-caption="Overhead shot of the murder victim" style="display: none;"> -->
                     </div>
                     <button class="carousel-arrow right-arrow">❯</button>
                 </div>
