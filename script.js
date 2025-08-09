@@ -182,79 +182,6 @@ function updateZoomLevel() {
 }
 updateZoomLevel();
 
-// Behind the Scenes Carousel
-const videoContainer = document.querySelector('#behind-the-scenes .video-container');
-if (videoContainer) {
-const videos = videoContainer.querySelectorAll('video');
-const dots = videoContainer.querySelectorAll('.carousel-dot');
-let currentVideoIndex = 0;
-let touchStartX = 0;
-let touchEndX = 0;
-
-function updateCarousel() {
-    // Hide all videos
-    videos.forEach(video => {
-        video.classList.remove('active');
-        video.pause();
-    });
-    
-    // Show current video
-    videos[currentVideoIndex].classList.add('active');
-    
-    // Update dots
-    dots.forEach((dot, index) => {
-        dot.classList.toggle('active', index === currentVideoIndex);
-    });
-}
-
-function showNextVideo() {
-    if (currentVideoIndex < videos.length - 1) {
-        currentVideoIndex++;
-        updateCarousel();
-    }
-}
-
-function showPrevVideo() {
-    if (currentVideoIndex > 0) {
-        currentVideoIndex--;
-        updateCarousel();
-    }
-}
-
-// Add touch event listeners for swipe functionality
-videoContainer.addEventListener('touchstart', (e) => {
-    touchStartX = e.changedTouches[0].screenX;
-});
-
-videoContainer.addEventListener('touchend', (e) => {
-    touchEndX = e.changedTouches[0].screenX;
-    handleSwipe();
-});
-
-function handleSwipe() {
-    const swipeThreshold = 50;
-    const diff = touchStartX - touchEndX;
-    
-    if (Math.abs(diff) > swipeThreshold) {
-        if (diff > 0) {
-            showNextVideo();
-        } else {
-            showPrevVideo();
-        }
-    }
-}
-
-// Add click handlers for dots
-dots.forEach((dot, index) => {
-    dot.addEventListener('click', () => {
-        currentVideoIndex = index;
-        updateCarousel();
-    });
-});
-
-// Initialize carousel
-updateCarousel();
-}
 
 // Spinning logo with pause after each rotation
 const modelViewer = document.querySelector('.logo-3d-container model-viewer');
@@ -345,8 +272,6 @@ if (contactForm && contactThankyou) {
 // Drawer play/pause button logic
 const drawerAudioToggleBtn = document.getElementById('drawerAudioToggle');
 const siteAudio = document.getElementById('site-audio');
-console.log(drawerAudioToggleBtn);
-console.log(siteAudio);
 if (drawerAudioToggleBtn && siteAudio) {
     function updateDrawerAudioToggleBtn() {
         if (siteAudio.paused) {
@@ -395,7 +320,7 @@ if (siteAudio) {
 // Pause site audio when videos are played
 document.addEventListener('DOMContentLoaded', () => {
     const siteAudio = document.getElementById('site-audio');
-    const videosToMonitor = document.querySelectorAll('#book-trailer video, #behind-the-scenes video');
+    const videosToMonitor = document.querySelectorAll('#book-trailer video');
 
     if (siteAudio) {
         videosToMonitor.forEach(video => {
@@ -420,12 +345,6 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', function() {
-    var audio = document.getElementById('site-audio');
-    if (audio) {
-        audio.volume = 0.2;
-    }
-});
 
 // Photo Gallery Modal Logic
 const galleryModal = document.getElementById('photo-gallery-modal');
