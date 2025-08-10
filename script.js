@@ -4,6 +4,7 @@ const drawerClose = document.getElementById('drawerClose');
 const menuItems = document.querySelectorAll('.drawer-menu-list a');
 
 hamburger.addEventListener('click', () => {
+    if (drawer.hasAttribute('hidden')) drawer.removeAttribute('hidden');
     drawer.classList.add('open');
     hamburger.classList.add('hide');
 });
